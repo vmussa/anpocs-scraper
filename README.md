@@ -1,0 +1,2 @@
+# Raspador dos Encontros Anuais da ANPOCS
+O presente repositório contém um código escrito em Python para raspar os dados dos Encontros Anuais da ANPOCS. Atualmente ele coleta os dados dos resumos dos trabalhos apresentados em todas as sessões de todas edições dos encontros. 
