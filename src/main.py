@@ -1,33 +1,38 @@
 """Código para a aquisição dos dados dos Encontros Anuais da ANPOCS."""
 from bs4 import BeautifulSoup
-import helium
 import pandas as pd
 import re
+from tqdm import tqdm
+from helium import (
+    start_chrome, click, get_driver, kill_browser, find_all, S
+)
 
 URL = ("https://www.anpocs2020.sinteseeventos.com.br/atividade/view?q=YToyOnt"
        "zOjY6InBhcmFtcyI7czozNjoiYToxOntzOjEyOiJJRF9BVElWSURBREUiO3M6MzoiMTI2"
        "Ijt9IjtzOjE6ImgiO3M6MzI6ImZjMjI3ODMwZTkzOTlmYjg1NzNjM2Y0MTUzNTM0NTEzI"
        "jt9&ID_ATIVIDADE=126")
 
+def get_urls(base_url):
+    pass
+
 def get_page_source(url):
     """Obtém código-fonte completo da página."""
     # inicia o chrome para renderizar o código-fonte 
-    helium.start_chrome(url, headless=True)
+    start_chrome(url, headless=True)
 
     # clica em todos os botões "Veja mais!" para liberar os dados dos resumos
-    while True:
-        try:
-            helium.click("Veja mais!")
-            print("Cliquei e liberei um resumo...")
-        except Exception:
-            print('Fim dos cliques. Todos os resumos estão disponíveis.')
-            break
+    print("Clicando em todos os botões. Isso pode demorar alguns segundos...")
+    buttons = find_all(S("//span[@onClick]"))
+    for i in tqdm(range(len(buttons))):
+        click("Veja mais!")
+        print(f"\nClique número {i}: um resumo aberto...")
+    print('Fim dos cliques. Todos os resumos estão disponíveis.')
 
     # obtém objeto soup a partir do código-fonte renderizado pelo helium
-    driver = helium.get_driver()
+    driver = get_driver()
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     # fecha o chrome
-    helium.kill_browser()
+    kill_browser()
 
     return soup
 
