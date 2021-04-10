@@ -3,19 +3,26 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 from tqdm import tqdm
+import requests
 from helium import (
     start_chrome, click, get_driver, kill_browser, find_all, S
 )
 
-URL = ("https://www.anpocs2020.sinteseeventos.com.br/atividade/view?q=YToyOnt"
-       "zOjY6InBhcmFtcyI7czozNjoiYToxOntzOjEyOiJJRF9BVElWSURBREUiO3M6MzoiMTI2"
-       "Ijt9IjtzOjE6ImgiO3M6MzI6ImZjMjI3ODMwZTkzOTlmYjg1NzNjM2Y0MTUzNTM0NTEzI"
-       "jt9&ID_ATIVIDADE=126")
-
-def get_urls(base_url):
-    pass
+BASE_URL = "https://www.anpocs2020.sinteseeventos.com.br/atividade/hub/gt"
 
 def get_page_source(url):
+    """Obtém soup object para páginas não interativas."""
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, 'html.parser')
+    return soup
+
+def get_urls(base_url):
+    soup = get_page_source(BASE_URL)
+    urls_sources = soup.select("h5 > a")
+    urls = [a['href'] for a in urls_sources]
+    return urls
+
+def get_interactive_page_source(url):
     """Obtém código-fonte completo da página."""
     # inicia o chrome para renderizar o código-fonte 
     start_chrome(url, headless=True)
@@ -36,8 +43,8 @@ def get_page_source(url):
 
     return soup
 
-def get_data(soup):
-    """Obtém dados dos trabalhos apresentados."""
+def get_page_data(soup):
+    """Obtém dados dos trabalhos apresentados em uma sessão."""
     # obtém dados textuais a partir dos seletores CSS de cada campo 
     authors = [autor.text for autor in soup.select('i')]
     titles = [titulo.text for titulo in soup.select('li > b')]
@@ -53,8 +60,14 @@ def get_data(soup):
 
     return data
 
+def get_all_pages_data(urls):
+    """Obtém dados de trabalhos de todas as sessões."""
+    for _, url in enumerate(urls):
+        soup = get_interactive_page_source(url)
+        data = get_page_data(soup)
+        df = pd.DataFrame(data)
+        df.to_csv(f'{_}anpocs_publications.csv', index=False)
+
 if __name__ == "__main__":
-    soup = get_page_source(url=URL)
-    data = get_data(soup)
-    df = pd.DataFrame(data)
-    df.to_csv('anpocs_publications.csv', index=False)
+    urls = get_urls(BASE_URL)
+    get_all_pages_data(urls)
