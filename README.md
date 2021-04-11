@@ -1,5 +1,5 @@
 # Raspador dos Encontros Anuais da ANPOCS
-O `anpocs-scraper` é um raspador dos dados dos [Encontros Anuais da ANPOCS](http://anpocs.com/index.php/encontros/apresentacao) escrito em Python. Atualmente o código permite coletar os dados de todos os resumos dos trabalhos apresentados em GT's do [44º Encontro Anual da ANPOCS](https://www.anpocs2020.sinteseeventos.com.br/).
+O `anpocs-scraper` é um raspador dos dados dos [Encontros Anuais da ANPOCS](http://anpocs.com/index.php/encontros/apresentacao) escrito em Python. Atualmente o código permite coletar os dados de todos os resumos dos trabalhos apresentados em SPG's e GT's do [44º Encontro Anual da ANPOCS](https://www.anpocs2020.sinteseeventos.com.br/).
 
 # Instalação e modo de uso
 Para instalar o raspador basta clonar o presente repositório e instalar suas dependências:

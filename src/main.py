@@ -8,7 +8,10 @@ from helium import (
     start_chrome, click, get_driver, kill_browser, find_all, S
 )
 
-BASE_URL = "https://www.anpocs2020.sinteseeventos.com.br/atividade/hub/gt"
+BASE_URLS = [
+    "https://www.anpocs2020.sinteseeventos.com.br/atividade/hub/gt",
+    "https://www.anpocs2020.sinteseeventos.com.br/atividade/hub/simposioposgraduada"
+]
 
 def get_page_source(url):
     """Obtém soup object para páginas não interativas."""
@@ -16,28 +19,31 @@ def get_page_source(url):
     soup = BeautifulSoup(r.content, 'html.parser')
     return soup
 
-def get_urls(base_url):
-    soup = get_page_source(BASE_URL)
-    urls_sources = soup.select("h5 > a")
-    urls = [a['href'] for a in urls_sources]
+def get_urls(base_urls):
+    """Obtém todos os URLs das páginas a serem raspadas."""
+    urls = []
+    for base_url in base_urls:
+        soup = get_page_source(base_url)
+        urls_sources = soup.select("h5 > a")
+        urls += [a['href'] for a in urls_sources]
     return urls
 
 def get_interactive_page_source(url):
     """Obtém código-fonte completo da página."""
     # inicia o chrome para renderizar o código-fonte 
     start_chrome(url, headless=True)
+    driver = get_driver()
 
     # clica em todos os botões "Veja mais!" para liberar os dados dos resumos
-    print("Clicando em todos os botões. Isso pode demorar alguns segundos...")
+    print(f"Raspando a página \"{driver.title}\". Isso pode demorar alguns segundos...")
     buttons = find_all(S("//span[@onClick]"))
     for i in tqdm(range(len(buttons))):
         click("Veja mais!")
-        print(f"\nClique número {i}: um resumo aberto...")
-    print('Fim dos cliques. Todos os resumos estão disponíveis.')
+    print('Fim da raspagem da página.')
 
     # obtém objeto soup a partir do código-fonte renderizado pelo helium
-    driver = get_driver()
     soup = BeautifulSoup(driver.page_source, 'html.parser')
+
     # fecha o chrome
     kill_browser()
 
@@ -68,6 +74,10 @@ def get_all_pages_data(urls):
         df = pd.DataFrame(data)
         df.to_csv(f'{_}anpocs_publications.csv', index=False)
 
-if __name__ == "__main__":
-    urls = get_urls(BASE_URL)
+def main():
+    print("Carregando algumas informações. A raspagem iniciará em breve...")
+    urls = get_urls(BASE_URLS)
     get_all_pages_data(urls)
+
+if __name__ == "__main__":
+    main()
