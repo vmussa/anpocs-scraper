@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 from tqdm import tqdm
+import os
 import requests
 from helium import (
     start_chrome, click, get_driver, kill_browser, find_all, S
@@ -72,11 +73,16 @@ def get_page_data(soup):
 
 def export_all_pages_data(urls):
     """Obtém e exporta para CSV dados de trabalhos de todas as sessões."""
-    for _, url in enumerate(urls):
+    for url in urls:
         soup = get_interactive_page_source(url)
         data = get_page_data(soup)
         df = pd.DataFrame(data)
-        df.to_csv(f'{_}anpocs_publications.csv', index=False)
+        if os.path.exists('resumos_anpocs44.csv'):
+            df.to_csv(
+                'resumos_anpocs44.csv', mode='a', index=False, header=False
+                )
+        else:
+            df.to_csv('resumos_anpocs44.csv', index=False)
 
 def main():
     print("Carregando algumas informações. A raspagem iniciará em breve...")
