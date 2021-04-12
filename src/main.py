@@ -8,6 +8,7 @@ from helium import (
     start_chrome, click, get_driver, kill_browser, find_all, S
 )
 
+EVENT_ID = 44
 BASE_URLS = [
     "https://www.anpocs2020.sinteseeventos.com.br/atividade/hub/gt",
     "https://www.anpocs2020.sinteseeventos.com.br/atividade/hub/simposioposgraduada"
@@ -37,7 +38,7 @@ def get_interactive_page_source(url):
     # clica em todos os botões "Veja mais!" para liberar os dados dos resumos
     print(f"Raspando a página \"{driver.title}\". Isso pode demorar alguns segundos...")
     buttons = find_all(S("//span[@onClick]"))
-    for i in tqdm(range(len(buttons))):
+    for _ in tqdm(range(len(buttons))):
         click("Veja mais!")
     print('Fim da raspagem da página.')
 
@@ -56,18 +57,21 @@ def get_page_data(soup):
     titles = [titulo.text for titulo in soup.select('li > b')]
     abstract_source = soup.find_all('div', id=re.compile('^resumoFull'))
     abstracts = [abstract.text.strip() for abstract in abstract_source]
+    session = soup.select_one('h3.first').text.strip()
 
     # cria dict com os dados obtidos
     data = {
         'autores': authors,
         'titulo': titles,
-        'resumo': abstracts
+        'resumo': abstracts,
+        'sessao': session,
+        'id_evento': EVENT_ID
     }
 
     return data
 
-def get_all_pages_data(urls):
-    """Obtém dados de trabalhos de todas as sessões."""
+def export_all_pages_data(urls):
+    """Obtém e exporta para CSV dados de trabalhos de todas as sessões."""
     for _, url in enumerate(urls):
         soup = get_interactive_page_source(url)
         data = get_page_data(soup)
@@ -77,7 +81,7 @@ def get_all_pages_data(urls):
 def main():
     print("Carregando algumas informações. A raspagem iniciará em breve...")
     urls = get_urls(BASE_URLS)
-    get_all_pages_data(urls)
+    export_all_pages_data(urls)
 
 if __name__ == "__main__":
     main()
