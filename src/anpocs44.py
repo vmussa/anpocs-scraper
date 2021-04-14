@@ -85,9 +85,13 @@ def export_all_pages_data(urls):
             df.to_csv('resumos_anpocs44.csv', index=False)
 
 def main():
-    print("Carregando algumas informações. A raspagem iniciará em breve...")
+    print(
+        "Carregando algumas informações. A raspagem do 44º Encontro Anual da "
+        "ANPOCS iniciará em breve..."
+    )
     urls = get_urls(BASE_URLS)
     export_all_pages_data(urls)
+    print("O 44º Encontro foi raspado com sucesso.")
 
 if __name__ == "__main__":
     main()

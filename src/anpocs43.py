@@ -84,6 +84,7 @@ def get_abstracts(tags):
     pass
 
 def main():
+    print("Começando a raspagem do 43º Encontro Anual da ANPOCS...")
     titles = get_titles()
     sessions = get_sessions()
     #abstracts = get_abstracts()
@@ -99,6 +100,7 @@ def main():
 
     df = pd.DataFrame(data)
     df.to_csv('resumos_anpocs43.csv', index=False)
+    print("O 43º Encontro foi raspado com sucesso.")
 
 if __name__ == "__main__":
     main()
