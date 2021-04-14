@@ -2,6 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import re
 
 EVENT_ID = 43
 URL = ("http://anpocs.com/index.php/43-encontro-anual-2019/2750-encontros-anu"
@@ -22,10 +23,11 @@ def is_inside_div(tag):
 def is_title_or_session(tag):
     is_child_of_span = tag.parent.name == 'span'
     is_strong = tag.name == 'strong'
-    excluded = tag.text == "Palavras-chave:"
+    exclusions = ["não", "Palavras-chave:", "ETHOS"]
+    exclude = lambda x: x in exclusions
     insider = is_inside_div(tag)
     return (
-        is_child_of_span and is_strong and not excluded and insider
+        is_child_of_span and is_strong and not exclude(tag.text) and insider
     )
 
 def is_title(tags):
@@ -37,7 +39,12 @@ def is_session(tags):
     return sessions
 
 def is_author(tag):
-    pass
+    is_span = tag.name == 'span'
+    has_strong = tag.find('strong')
+    if has_strong:
+        has_session_info = has_strong.find(string=re.compile(r'ST\d\d|SPG\d\d'))
+    is_inside = is_inside_div(tag)
+    return is_span and has_strong and is_inside and has_session_info
 
 def is_abstract(tag):
     pass
@@ -80,10 +87,10 @@ def main():
     titles = get_titles()
     sessions = get_sessions()
     #abstracts = get_abstracts()
-    #authors = get_authors()
+    authors = get_authors()
 
     data = {
-        'autores': None,
+        'autores': authors,
         'titulo': titles,
         'resumo': None,
         'sessao': sessions,
@@ -92,7 +99,6 @@ def main():
 
     df = pd.DataFrame(data)
     df.to_csv('resumos_anpocs43.csv', index=False)
-    import ipdb; ipdb.set_trace()
 
 if __name__ == "__main__":
     main()
