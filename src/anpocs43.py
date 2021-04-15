@@ -47,8 +47,12 @@ def is_author(tag):
     return is_span and has_strong and is_inside and has_session_info
 
 def is_abstract(tag):
-    pass
-
+    is_span = tag.name == 'span'
+    has_not_strong = not tag.find('strong')
+    has_key_word = tag.find('strong', string='Palavras-chave:')
+    is_inside = is_inside_div(tag)
+    return is_inside and is_span and (has_not_strong or has_key_word)
+    
 def get_titles_and_session_tags():
     tags = soup.find_all(is_title_or_session)
     return tags
@@ -78,29 +82,38 @@ def get_abstracts_tags():
     tags = soup.find_all(is_abstract)
     return tags
 
-def get_abstracts(tags):
-    # abstracts = is_abstract(tags)
-    # return abstracts
-    pass
+def get_abstracts():
+    tags = get_abstracts_tags()
+    abstracts = [abstract.text for abstract in tags]
+    return abstracts
+
+def clean_data(df):
+    df.loc[477, 'resumo'] += df.loc[478, 'resumo'] + df.loc[479, 'resumo']
+    df.drop([0, 1, 79, 80, 301, 478, 479, 573, 619, 620, 621], inplace=True)
+    df.reset_index(drop=True, inplace=True)
+    return df
 
 def main():
     print("Começando a raspagem do 43º Encontro Anual da ANPOCS...")
     titles = get_titles()
     sessions = get_sessions()
-    #abstracts = get_abstracts()
+    abstracts = get_abstracts()
     authors = get_authors()
 
     data = {
         'autores': authors,
         'titulo': titles,
-        'resumo': None,
         'sessao': sessions,
         'id_evento': EVENT_ID
     }
 
+    df_abstracts = pd.DataFrame(abstracts, columns=['resumo'])
+    df_abstracts = clean_data(df_abstracts)
     df = pd.DataFrame(data)
+    df = pd.concat([df, df_abstracts], axis=1)
     df.to_csv('resumos_anpocs43.csv', index=False)
     print("O 43º Encontro foi raspado com sucesso.")
+    import ipdb; ipdb.set_trace()
 
 if __name__ == "__main__":
     main()
