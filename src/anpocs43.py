@@ -1,4 +1,6 @@
 """Código para a raspagem dos resumos 43º Encontro Anual da ANPOCS."""
+from os import mkdir, sep
+from os.path import abspath, dirname, exists
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -130,7 +132,16 @@ def main():
     }
     
     df = pd.DataFrame(data)
-    df.to_csv('resumos_anpocs43.csv', index=False)
+
+    # gera o CSV com os resultados da raspagem
+    output_path = f"{dirname(dirname(abspath(__file__)))}{sep}output{sep}"
+    filename = "resumos_anpocs43.csv"
+    if exists(output_path):
+        df.to_csv(output_path + filename, index=False)
+    else:
+        mkdir(output_path)
+        df.to_csv(output_path + filename)
+
     print("O 43º Encontro foi raspado com sucesso.")
 
 if __name__ == "__main__":

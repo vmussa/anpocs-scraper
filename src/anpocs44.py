@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 from tqdm import tqdm
-import os
+from os import mkdir, sep
+from os.path import abspath, dirname, exists
 import requests
 from helium import (
     start_chrome, click, get_driver, kill_browser, find_all, S
@@ -77,12 +78,19 @@ def export_all_pages_data(urls):
         soup = get_interactive_page_source(url)
         data = get_page_data(soup)
         df = pd.DataFrame(data)
-        if os.path.exists('resumos_anpocs44.csv'):
+
+        output_path = f"{dirname(dirname(abspath(__file__)))}{sep}output{sep}"
+        filename = "resumos_anpocs44.csv"        
+        if exists(output_path):
             df.to_csv(
-                'resumos_anpocs44.csv', mode='a', index=False, header=False
+                output_path + filename,
+                mode='a',
+                index=False,
+                header=False
                 )
         else:
-            df.to_csv('resumos_anpocs44.csv', index=False)
+            mkdir(output_path)
+            df.to_csv(output_path + filename, index=False)
 
 def main():
     print(
