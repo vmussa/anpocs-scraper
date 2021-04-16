@@ -12,6 +12,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 Para rodar o raspador, continue no repositório clonado e execute o código `main.py` com o Python:
+> :warning: **Você precisa instalar o Google Chrome e o ChromeDriver**: [Clique aqui](https://chromedriver.chromium.org/getting-started) para ler um tutorial sobre como instalar o ChromeDriver.
 ```
 python src/main.py
 ```
