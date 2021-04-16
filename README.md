@@ -8,7 +8,7 @@ Para instalar o raspador basta clonar o presente repositório e instalar suas de
 ```
 git clone https://github.com/vmussa/anpocs-scraper
 cd anpocs-scraper
-python -m venv .venv
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 Para rodar o raspador, continue no repositório clonado e execute o código `main.py` com o Python:
