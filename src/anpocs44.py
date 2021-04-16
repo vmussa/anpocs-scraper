@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 from tqdm import tqdm
+import sys
 from os import mkdir, sep
 from os.path import abspath, dirname, exists
 import requests
@@ -34,7 +35,15 @@ def get_urls(base_urls):
 def get_interactive_page_source(url):
     """Obtém código-fonte completo da página."""
     # inicia o chrome para renderizar o código-fonte 
-    start_chrome(url, headless=True)
+    try:
+        start_chrome(url, headless=True)
+    except Exception:
+        print(
+            "Erro: você precisa instalar o Google Chrome e o ChromeDriver par"
+            "a executar esse raspador."
+            )
+        sys.exit(1)
+    
     driver = get_driver()
 
     # clica em todos os botões "Veja mais!" para liberar os dados dos resumos
