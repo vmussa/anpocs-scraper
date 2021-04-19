@@ -25,4 +25,4 @@ Futuramente o raspador abarcará todos os GT's e SPG's do encontro 45, cujos res
 [Vítor Mussa](https://vmussa.github.io/) (@vmussa) e Daniel Mendes (@danielmnds34).
 
 # Agradecimentos
-Agradecemos à ANPOCS, à CAPES, ao PPGSA/UFRJ e aos laboratórios de pesquisa [LABHD/UFBA](http://www.labhd.ufba.br/) e DTA/UFRJ.
+Agradecemos à ANPOCS, à CAPES, ao PPGSA/UFRJ e aos laboratórios de pesquisa [LABHD/UFBA](http://www.labhd.ufba.br/) e [DTA/UFRJ](https://www.nucleodta.org/inicio).
