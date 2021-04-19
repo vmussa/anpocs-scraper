@@ -19,7 +19,7 @@ python src/main.py
 ```
 
 # Em breve
-Futuramente o raspador abarcará todos os GT's e SPG's do encontro 45, cujos resumos dos trabalhos estarão disponíveis [aqui](https://www.anpocs2021.sinteseeventos.com.br/).
+Futuramente o raspador abarcará todos os GT's e SPG's do encontro 45, cujos resumos dos trabalhos estarão disponíveis [aqui](https://www.anpocs2021.sinteseeventos.com.br/). Além disso, ele contará com um módulo de limpeza dos dados que fará o pré-processamento para a análise qualitativa e/ou computacional.
 
 # Autores
 [Vítor Mussa](https://vmussa.github.io/) (@vmussa) e Daniel Mendes (@danielmnds34).
