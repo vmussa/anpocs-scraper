@@ -90,7 +90,7 @@ def export_all_pages_data(urls):
 
         output_path = f"{dirname(dirname(abspath(__file__)))}{sep}output{sep}"
         filename = "resumos_anpocs44.csv"        
-        if exists(output_path):
+        if exists(output_path+filename):
             df.to_csv(
                 output_path + filename,
                 mode='a',
@@ -98,8 +98,11 @@ def export_all_pages_data(urls):
                 header=False
                 )
         else:
-            mkdir(output_path)
-            df.to_csv(output_path + filename, index=False)
+            try:
+                mkdir(output_path)
+                df.to_csv(output_path + filename, index=False)
+            except FileExistsError:
+                df.to_csv(output_path + filename, index=False)
 
 def main():
     print(
