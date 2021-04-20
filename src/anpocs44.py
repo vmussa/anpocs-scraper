@@ -110,6 +110,16 @@ def main():
         "ANPOCS iniciará em breve..."
     )
     urls = get_urls(BASE_URLS)
+
+    # checa se já há arquivos de raspagens antigas na pasta output
+    output_path = f"{dirname(dirname(abspath(__file__)))}{sep}output{sep}"
+    filename = "resumos_anpocs44.csv"
+    if exists(output_path+filename):
+        raise Exception(
+            "Os dados raspados já estão na pasta output. "
+            "Remova-os da pasta antes de rodar o raspador."
+            )
+    
     export_all_pages_data(urls)
     print("O 44º Encontro foi raspado com sucesso.")
 
