@@ -126,7 +126,7 @@ def main():
     data = {
         'autores': authors,
         'titulo': titles,
-        'abstracts': abstracts,
+        'resumo': abstracts,
         'sessao': sessions,
         'id_evento': EVENT_ID
     }
