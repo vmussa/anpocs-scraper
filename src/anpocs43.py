@@ -140,7 +140,7 @@ def main():
         df.to_csv(output_path + filename, index=False)
     else:
         mkdir(output_path)
-        df.to_csv(output_path + filename)
+        df.to_csv(output_path + filename, index=False)
 
     print("O 43º Encontro foi raspado com sucesso.")
 
