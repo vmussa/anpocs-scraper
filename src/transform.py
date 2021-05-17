@@ -34,7 +34,7 @@ def main():
     anpocs43 = clean_anpocs43_data()
     anpocs44 = clean_anpocs44_data()
     df = pd.concat([anpocs43, anpocs44]).reset_index(drop=True)
-    df.to_csv(f'{OUTPUT_PATH}resumos_anpocs.csv')
+    df.to_csv(f'{OUTPUT_PATH}resumos_anpocs.csv', index=False)
 
 
 if __name__ == "__main__":
